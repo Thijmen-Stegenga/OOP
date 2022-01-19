@@ -3,6 +3,7 @@
 	require "Attack.php";
 	require "Weakness.php";
 	require "Resistance.php";
+	require "Energytype.php";
 
 	class Pokemon {
 		public static $populationPokemons;
@@ -27,17 +28,17 @@
 		
 		public function attack($target, $attackNumber) {
 			$target->receiveDamage($this->attacks[$attackNumber], $this->energyType);
-			return $this->attacks[$attackNumber]->name;
+			return $this->attacks[$attackNumber]->getName();
 		}
 		
 		private function receiveDamage($attack, $energyType) {
-			if ($energyType == $this->weakness->energyType) {
-				$attack->damage *= $this->weakness->weaknessMultiplier;
+			if ($energyType == $this->weakness->getWeaknessEnergytype()) {
+				$attack->damage *= $this->weakness->getWeaknessMultiplier();
 			}
-			else if ($energyType == $this->resistance->energyType) {
-				$attack->damage -= $this->resistance->resistanceValue;
+			else if ($energyType == $this->resistance-> getResistanceEnergytype()) {
+				$attack->damage -= $this->resistance-> getResistanceValue();
 			}
-			$this->health -= $attack->damage;
+			$this->health -= $attack->getDamage();
 			if ($this->health <= 0) {
 				self::$populationPokemons--;
 			}
@@ -58,10 +59,32 @@
 		public function getHitpoints() {
 			return $this->hitPoints;
 		}	
+
+		public function getEnergyType(){
+			return $this->energyType;
+		}
+
+		public function getAttack(){
+			return $this->attacks;
+		}
+
+		public function getWeakness(){
+			return $this->weakness;
+		}
+
+		public function getResistance(){
+			return $this->resistance;
+		}
+
 		
-		// public function stats(){
-  //       return
-  //       "Name: ". $this->getName(). "<br>".
-  //       "Health: ". $this->getHitpoints()."<br>";
-  //       }    
+		public function stats(){
+        return
+        "Name: ". $this->getName(). "<br>".
+        "Health: ". $this->getHitpoints()."<br>".
+        "Energytype: ". $this->getEnergyType()->name."<br>".
+        "Attacks:". $this->getAttack()[0]->getName()." (damage:". $this->getAttack()[0]->getDamage()."),  ". $this->getAttack()[1]->getName()." (damage:". $this->getAttack()[1]->getDamage().")<br>".
+        "Weakness: ". $this->getWeakness()->getWeaknessEnergytype().", ".$this->getWeakness()->getWeaknessMultiplier()."<br>".
+        "Resistance: ". $this->getResistance()->getResistanceEnergytype().", ". $this->getResistance()->getResistanceValue();
+        }    
+        
 	}
